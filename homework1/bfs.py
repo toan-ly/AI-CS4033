@@ -6,11 +6,13 @@ def breadth_first_search(start, goal='Bucharest'):
     visited = set()
     queue = deque([start])
     parent = {start: None}
+    nodes_visited = 0
 
     while queue:
         city = queue.popleft()
+        nodes_visited += 1 # Count nodes visited
         if city == goal:
-            return retrieve_path(parent, start, goal)
+            return retrieve_path(parent, start, goal), nodes_visited
         visited.add(city)
         
         for neighbor, _ in get_neighbors(city):
@@ -18,5 +20,4 @@ def breadth_first_search(start, goal='Bucharest'):
                 parent[neighbor] = city
                 queue.append(neighbor)
                 
-    return [] # No path found
-    
+    return [], nodes_visited # No path found

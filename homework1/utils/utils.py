@@ -50,11 +50,11 @@ straight_line_dist = {
 
 def retrieve_path(parent, start, goal):
     """
-    Reconstructs the path from the start city to the goal city after finishing searching
-    Args:
+    Reconstruct the path from the start city to the goal city after the search is done
+    Arguments include:
         parent (dict): A dictionary mapping each city to its previous city in the path.
-        start (str): The starting city.
-        goal (str): The goal city.
+        start (str): Starting city.
+        goal (str): Goal city.
     Returns:
         list: A list of cities representing the reconstructed path from the start city to the goal city.
     """
@@ -85,11 +85,10 @@ def timeit(iterations=100):
         def wrapper(*args, **kwargs):
             start_time = time.time()
             for _ in range(iterations):
-                path, cost = algorithm(*args, **kwargs)
+                path, visited = algorithm(*args, **kwargs)
             end_time = time.time()
             print(f'{algorithm.__name__} took {(end_time - start_time):.6f} seconds')
-            print(f'Path: {path}')
-            print(f'Cost: {cost}')
+            print(f'Node Visited: {visited}')
             return path
         return wrapper
     return decorator
