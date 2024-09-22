@@ -69,7 +69,7 @@ def retrieve_path(parent, start, goal):
                 total_cost += cost
                 break
         current = prev
-        
+
     path.append(start)
     return path[::-1], total_cost
 
@@ -79,16 +79,16 @@ def get_neighbors(city):
 def heuristic(city):
     return straight_line_dist[city]
 
-
 def timeit(iterations=100):
     def decorator(algorithm):
         def wrapper(*args, **kwargs):
             start_time = time.time()
             for _ in range(iterations):
-                path, visited = algorithm(*args, **kwargs)
+                (path, cost), visited = algorithm(*args, **kwargs)
             end_time = time.time()
             print(f'{algorithm.__name__} took {(end_time - start_time):.6f} seconds')
-            print(f'Node Visited: {visited}')
-            return path
+            return path, cost, visited
+        # Bypass timeit if needed
+        wrapper.__wrapped__ = algorithm
         return wrapper
     return decorator
