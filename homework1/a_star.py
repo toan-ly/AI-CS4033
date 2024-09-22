@@ -1,7 +1,7 @@
 from utils.utils import *
 import heapq
 
-@timeit(iterations=100)
+@timeit(iterations=1000)
 def a_star(start, goal='Bucharest'):
     visited = set()
     pq = [(0 + heuristic(start), 0, start)]  # priority queue (f(n), g(n), node)

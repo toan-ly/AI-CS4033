@@ -1,6 +1,6 @@
 from utils.utils import *
 
-@timeit(iterations=100)
+@timeit(iterations=1000)
 def depth_first_search(start, goal='Bucharest'):
     visited = set()
     stack = [start]

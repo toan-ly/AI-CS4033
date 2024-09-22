@@ -79,7 +79,7 @@ def get_neighbors(city):
 def heuristic(city):
     return straight_line_dist[city]
 
-def timeit(iterations=100):
+def timeit(iterations=1000):
     def decorator(algorithm):
         def wrapper(*args, **kwargs):
             start_time = time.time()

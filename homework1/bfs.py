@@ -1,7 +1,7 @@
 from utils.utils import *
 from collections import deque
 
-@timeit(iterations=100)
+@timeit(iterations=1000)
 def breadth_first_search(start, goal='Bucharest'):
     visited = set()
     queue = deque([start])

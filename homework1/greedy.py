@@ -1,7 +1,7 @@
 from utils.utils import *
 import heapq
 
-@timeit(iterations=100)
+@timeit(iterations=1000)
 def best_first_search(start, goal='Bucharest'):
     visited = set()
     pq = [(heuristic(start), start)]  # (h(n), node)
