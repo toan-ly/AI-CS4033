@@ -50,11 +50,11 @@ straight_line_dist = {
 
 def retrieve_path(parent, start, goal):
     """
-    Reconstructs the path from the start city to the goal city after finishing searching
-    Args:
+    Reconstruct the path from the start city to the goal city after the search is done
+    Arguments include:
         parent (dict): A dictionary mapping each city to its previous city in the path.
-        start (str): The starting city.
-        goal (str): The goal city.
+        start (str): Starting city.
+        goal (str): Goal city.
     Returns:
         list: A list of cities representing the reconstructed path from the start city to the goal city.
     """
@@ -69,7 +69,7 @@ def retrieve_path(parent, start, goal):
                 total_cost += cost
                 break
         current = prev
-        
+
     path.append(start)
     return path[::-1], total_cost
 
@@ -79,17 +79,16 @@ def get_neighbors(city):
 def heuristic(city):
     return straight_line_dist[city]
 
-
-def timeit(iterations=100):
+def timeit(iterations=1000):
     def decorator(algorithm):
         def wrapper(*args, **kwargs):
             start_time = time.time()
             for _ in range(iterations):
-                path, cost = algorithm(*args, **kwargs)
+                (path, cost), visited = algorithm(*args, **kwargs)
             end_time = time.time()
             print(f'{algorithm.__name__} took {(end_time - start_time):.6f} seconds')
-            print(f'Path: {path}')
-            print(f'Cost: {cost}')
-            return path
+            return path, cost, visited
+        # Bypass timeit if needed
+        wrapper.__wrapped__ = algorithm
         return wrapper
     return decorator
