@@ -3,6 +3,17 @@ from collections import deque
 
 @timeit(iterations=1000)
 def breadth_first_search(start, goal='Bucharest'):
+    """
+    Implements the Breadth-First Search (BFS) algorithm to find the shortest path from the start city to the goal city.
+
+    Parameters:
+    - start (str): The starting city.
+    - goal (str): The goal city. Defaults to 'Bucharest'.
+
+    Returns:
+    - tuple: A tuple containing the path as a list of cities and the number of nodes visited.
+             If no path is found, returns an empty list and the number of nodes visited.
+    """
     visited = set()
     queue = deque([start])
     parent = {start: None}
