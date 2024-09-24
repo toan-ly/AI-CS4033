@@ -3,6 +3,17 @@ import heapq
 
 @timeit(iterations=1000)
 def a_star(start, goal='Bucharest'):
+    """
+    Implements the A* search algorithm to find the shortest path from the start city to the goal city.
+
+    Parameters:
+    - start (str): The starting city.
+    - goal (str): The goal city. Defaults to 'Bucharest'.
+
+    Returns:
+    - tuple: A tuple containing the path as a list of cities and the number of nodes visited.
+             If no path is found, returns an empty list and the number of nodes visited.
+    """
     visited = set()
     pq = [(0 + heuristic(start), 0, start)]  # priority queue (f(n), g(n), node)
     parent = {start: None}
