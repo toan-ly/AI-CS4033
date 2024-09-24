@@ -48,6 +48,34 @@ straight_line_dist = {
     'Zerind': 374
 }
 
+def estimated_straight_line_distance(city1, city2, straight_line_dist):
+    """
+    Estimate the straight-line distance between two cities using their distances to Bucharest.
+
+    Parameters:
+    - city1 (str): The name of the first city.
+    - city2 (str): The name of the second city.
+    - straight_line_dist (dict): A dictionary mapping city names to their straight-line distances to Bucharest.
+
+    Returns:
+    - int: The estimated straight-line distance between city1 and city2.
+
+    Raises:
+    - ValueError: If either city1 or city2 is not in the straight_line_dist dictionary.
+    """
+    if city1 not in straight_line_dist:
+        raise ValueError(f"City '{city1}' not found in straight_line_dist.")
+    if city2 not in straight_line_dist:
+        raise ValueError(f"City '{city2}' not found in straight_line_dist.")
+    
+    distance1 = straight_line_dist[city1]
+    distance2 = straight_line_dist[city2]
+    
+    # Estimate using the absolute difference
+    estimated_distance = abs(distance1 - distance2)
+    
+    return estimated_distance
+
 def retrieve_path(parent, start, goal):
     """
     Reconstruct the path from the start city to the goal city after the search is done
