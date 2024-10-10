@@ -7,7 +7,7 @@ swap([H | T], [H | T1]):-
     swap(T, T1).
 
 
-/* 
+/*
 Bubble Sort Implementation:
     Repeatedly check adjacent elements and swap them if
     they are in the wrong order until the list is sorted
@@ -19,8 +19,8 @@ bubbleSort(L, SL):-
 bubbleSort(L, L). % here, the list is already sorted
 
 
-/* 
-ordered determines if the list is sorted by checking if 
+/*
+ordered determines if the list is sorted by checking if
 every element is <= the following element
 */
 ordered([]). % base case empty list
@@ -37,7 +37,7 @@ ordered([H1, H2 | T]):-
 
 /*
 Insertion Sort Implementation:
-    insert(E, SL, SLE): Take 1 element E at a time and insert 
+    insert(E, SL, SLE): Take 1 element E at a time and insert
     into the appropriate location in the sorted sublist
 */
 
@@ -49,7 +49,7 @@ insert(E, [H | T], [E, H | T]):-
     !.
 
 /*
-If E > H, then E is not in H. Therefore, E is recursively 
+If E > H, then E is not in H. Therefore, E is recursively
 inserted into the tail T and H remains unchanged
 */
 insert(E, [H | T], [H | T1]):-
@@ -57,7 +57,8 @@ insert(E, [H | T], [H | T1]):-
     insert(E, T, T1).
 
 /*
-COMMENT!!!!!
+Insertion Sort Implementation: 
+	COMMENT!!!!!
 */
 insertionSort([], []). % base case: empty list is already sorted
 insertionSort([H | T], SORTED) :-
@@ -79,7 +80,7 @@ mergeSort(L, SL):-
 
 /* Split the list L1 into 2 halves L1 and L2 */
 intDiv(N, N1, R):- R is div(N, N1). % return integer division of N/N1
-split_in_half([], _, _):-!, fail. 
+split_in_half([], _, _):-!, fail.
 split_in_half([X], [], [X]). % split single element list
 split_in_half(L, L1, L2):-
     length(L, N),
@@ -91,7 +92,7 @@ split_in_half(L, L1, L2):-
 merge([], L, L). % base case: result is second half if the first half is empty
 merge(L, [], L). % base case: result is first half if the second half is empty
 
-/* 
+/*
 Place H1 at the beginning of the list if H1 <= H2
 Then recursively merge the rest of T1 with the second half [H2 | T2]
 */
@@ -108,7 +109,7 @@ merge([H1|T1], [H2|T2], [H2|T]):-
     merge([H1 | T1], T2, T).
 
 
-/* 
+/*
 Quick Sort Implementation:
     Choose a pivot element and split the list into 2 parts
 */
@@ -136,15 +137,19 @@ quickSort([H | T], LS):-
     append(S, [H | B], LS). % combine sorted SMALL, pivot, and sorted BIG
 
 
-/* 
+/*
 Hybrid Sort Implementation:
     Use a small sort algorithm (Bubble Sort, Insertion Sort) for small lists (size < threshold)
     Use a big sort algorithm (Merge Sort, Quick Sort) for large lists (size >= threshold)
 */
 % When list is small
-hybridSort(LIST, SMALLALG, BIGALG, THRESHOLD, SLIST):-
+hybridSort(LIST, bubbleSort, BIGALG, THRESHOLD, SLIST):-
     length(LIST, N), N =< THRESHOLD,
-    SMALLALG(LIST, SLIST).
+    bubbleSort(LIST, SLIST).
+
+hybridSort(LIST, insertionSort, BIGALG, THRESHOLD, SLIST):-
+    length(LIST, N), N =< THRESHOLD,
+    insertionSort(LIST, SLIST).
 
 % When list is large and mergeSort is used
 hybridSort(LIST, SMALLALG, mergeSort, THRESHOLD, SLIST):-
@@ -155,18 +160,19 @@ hybridSort(LIST, SMALLALG, mergeSort, THRESHOLD, SLIST):-
     merge(S1, S2, SLIST).
 
 % When list is large and quickSort is used
-# hybridSort([H | T], SMALLALG, quickSort, THRESHOLD, SLIST):-
-#     length([H |T], N), N > THRESHOLD,
-#     split(H, T, L1, L2),
-#     hybridSort(L1, SMALLALG, quickSort, THRESHOLD, S1),
-#     hybridSort(L2, SMALLALG, quickSort, THRESHOLD, S2),
-#     append(S1, [H | S2], SLIST).
-# hybridSort([H | T], SMALLALG, quickSort, THRESHOLD, SLIST):-
-#     length([H | T], N), N > THRESHOLD,
-#     split(H, T, L1, L2),
-#     hybridSort(L1, SMALLALG, quickSort, THRESHOLD, S1),
-#     hybridSort(L2, SMALLALG, quickSort, THRESHOLD, S2),
-#     append(S1, [H | S2], SLIST).
+hybridSort([H | T], SMALLALG, quickSort, THRESHOLD, SLIST):-
+    length(LIST, N), N > THRESHOLD,
+    split(H, T, L1, L2),
+    hybridSort(L1, SMALLALG, quickSort, THRESHOLD, S1),
+    hybridSort(L2, SMALLALG, quickSort, THRESHOLD, S2),
+    append(S1, [H | S2], SLIST).
+
+hybridSort([H | T], SMALLALG, quickSort, THRESHOLD, SLIST):-
+    length([H |T], N), N > THRESHOLD,
+    split(H, T, L1, L2),
+    hybridSort(L1, SMALLALG, quickSort, THRESHOLD, S1),
+    hybridSort(L2, SMALLALG, quickSort, THRESHOLD, S2),
+    append(S1, [H | S2], SLIST).
 
 
 /*------------------------------------------------------------------------------*/
@@ -175,9 +181,9 @@ randomList(N, LIST):-
     length(LIST, N),
     maplist(random(0, 1000), LIST).
 
-% Create N random lists of different lengths 
+% Create N random lists of different lengths
 createRandomLists(N):-
-    random(10, 100000, SIZE),
+    random(10, 100, SIZE),
     randomList(SIZE, L),
     assertz(random_list(N, L)),
     N1 is N - 1,
@@ -186,32 +192,30 @@ createRandomLists(N):-
 create50Lists:-
     createRandomLists(50).
 
-% Time a sorting algorithm 
-timeAlg(ALG, LIST, TIME):-
+% Time a sorting algorithm
+timeAlg(Name, Alg, TIME):-
     statistics(cputime, T0),
-    call(ALG, LIST, _),
+    Alg,
     statistics(cputime, T1),
     TIME is T1 - T0,
-    format('CPU time: ~w~n', [TIME]).
+    format('~w time: ~w seconds~n', [Name, TIME]).  % Print the algorithm name and the time
 
 runAll:-
-    randomList(50, L),
-    timeAlg(bubbleSort(L), timeBuble),
-    timeAlg(insertionSort(L), timeInsertion),
-    timeAlg(mergeSort(L), timeMerge),
-    timeAlg(quickSort(L), timeQuick),
-    timeAlg(hybridSort(L, bubbleSort, mergeSort, 10), timeHybridBubbleMerge),
-    timeAlg(hybridSort(L, insertionSort, mergeSort, 10), timeHybridInsertionMerge),
-    timeAlg(hybridSort(L, bubbleSort, quickSort, 10), timeHybridBubbleQuick),
-    timeAlg(hybridSort(L, insertionSort, quickSort, 10), timeHybridInsertionQuick),
-    format('Bubble Sort: ~w~n', [timeBuble]),
-    format('Insertion Sort: ~w~n', [timeInsertion]),
-    format('Merge Sort: ~w~n', [timeMerge]),
-    format('Quick Sort: ~w~n', [timeQuick]),
-    format('Hybrid Bubble Merge Sort: ~w~n', [timeHybridBubbleMerge]),
-    format('Hybrid Insertion Merge Sort: ~w~n', [timeHybridInsertionMerge]),
-    format('Hybrid Bubble Quick Sort: ~w~n', [timeHybridBubbleQuick]),
-    format('Hybrid Insertion Quick Sort: ~w~n', [timeHybridInsertionQuick]),
-    assertz(sort_times(N, timeBuble, timeInsertion, timeMerge, timeQuick, timeHybridBubbleMerge, timeHybridInsertionMerge, timeHybridBubbleQuick, timeHybridInsertionQuick)).
-
-:- dynamic(sort_times/9).
+    randomList(10, SmallList),
+    timeAlg("Bubble Sort", bubbleSort(SmallList, SortedBubble), TimeBubble),
+    writeln(SortedBubble), nl,
+    timeAlg("Insertion Sort", insertionSort(SmallList, SortedInsert), TimeInsertion),
+    writeln(SortedInsert), nl,
+    randomList(50, LargeList),
+    timeAlg("Merge Sort", mergeSort(LargeList, SortedMerge), TimeMerge),
+    writeln(SortedMerge), nl,
+    timeAlg("Quick Sort", quickSort(LargeList, SortedQuick), TimeQuick),
+    writeln(SortedQuick), nl,
+    timeAlg("Bubble + Merge Sort", hybridSort(LargeList, bubbleSort, mergeSort, 10, SortedHybridBubbleMerge), TimeHybridBubbleMerge),
+    writeln(SortedHybridBubbleMerge), nl,
+    timeAlg("Insertion + Merge Sort", hybridSort(LargeList, insertionSort, mergeSort, 10, SortedHybridInsertionMerge), TimeHybridInsertionMerge),
+    writeln(SortedHybridInsertionMerge), nl,
+    timeAlg("Bubble + Quick Sort", hybridSort(LargeList, bubbleSort, quickSort, 10, SortedHybridBubbleQuick), TimeHybridBubbleQuick),
+    writeln(SortedHybridBubbleQuick), nl,
+    timeAlg("Insertion + Quick Sort", hybridSort(LargeList, insertionSort, quickSort, 10, SortedHybridInsertionQuick), TimeHybridInsertionQuick),
+    writeln(SortedHybridInsertionQuick), nl.
