@@ -103,7 +103,7 @@ merge([H1 | T1], [H2 | T2], [H1 | T]):-
 Place H2 at the beginning of the list if H1 >= H2 otherwise
 Then recursively merge the first half [H1 | T1] with the rest of T2
 */
-merge([H1|T1], [H2|T2], [H2|T]):-
+merge([H1 | T1], [H2 | T2], [H2 | T]):-
     H2 =< H1,
     merge([H1 | T1], T2, T).
 
@@ -167,7 +167,7 @@ hybridSort([H | T], SMALLALG, quickSort, THRESHOLD, SLIST):-
     append(S1, [H | S2], SLIST).
 
 hybridSort([H | T], SMALLALG, quickSort, THRESHOLD, SLIST):-
-    length([H |T], N), N > THRESHOLD,
+    length([H | T], N), N > THRESHOLD,
     split(H, T, L1, L2),
     hybridSort(L1, SMALLALG, quickSort, THRESHOLD, S1),
     hybridSort(L2, SMALLALG, quickSort, THRESHOLD, S2),
