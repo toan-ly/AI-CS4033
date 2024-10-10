@@ -58,7 +58,7 @@ insert(E, [H | T], [H | T1]):-
 
 /* Insertion Sort Implementation */
 /* Base case: an empty list is already sorted */
-insertionSort([], []). % base case: empty list is already sorted
+insertionSort([], []).
 /* Recursive case: sorts the tail of the list and then inserts the head into the sorted tail */
 insertionSort([H | T], SORTED) :-
     insertionSort(T, T1),
