@@ -224,7 +224,7 @@ call_alg(a_star, Start, Goal, Path, Cost, VisitedCount) :-
 
 % Test all algorithms
 run_all :-
-    Cities = [sibiu, zerind, neamt, timisoara],
+    Cities = [oradea, neamt, timisoara],
     Algorithms = [bfs, dfs, a_star],
     forall(member(City, Cities),
         forall(member(Alg, Algorithms),
