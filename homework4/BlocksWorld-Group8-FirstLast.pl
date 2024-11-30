@@ -1,14 +1,13 @@
-/**
- * Blocks World Problem 
- * 
- * Group 8:
- * Huy Nguyen
- * Toan Ly
- * Toan Nham
- * 
- * All contributed equally
- */
+/*
+Blocks World Problem 
+ 
+Group 8:
+    Huy Nguyen
+    Toan Ly
+    Toan Nham
 
+All contributed equally
+*/
 
 % Define all the blocks in the world
 blocks([a, b, c, d, e, f]).
@@ -31,7 +30,6 @@ block(X) :-
 % notequal(X, X) :-!, fail. % fail, if equal
 % notequal(_, _). % otherwise, succeed
 notequal(X, Y) :- X \= Y.
-
 
 % substitute(E, E1, OLD, NEW) holds when NEW is the list OLD in which E is substituted 
 % by E1. There are no dups in OLD or NEW
@@ -99,24 +97,67 @@ depthFirst(X, [X|Ypath], VISITED) :-
     notYetVisited(Y, VISITED), % check if Y has been visited
     depthFirst(Y, Ypath, [Y|VISITED]). % find path from Y
 
-
 %---------------------------------------------------------------------------------
 % Test cases
+
+/*
+     a                      b
+     b                      a
+----------- (table) => ------------
+*/ 
 test_case(1,
-    [[on, a, b], [on, b, 'table'], [on, c, d], [clear, c], [clear, a], [on, d, 'table']],
-    [[on, d, a], [on, a, c], [on, c, b], [on, b, 'table'], [clear, a]]).
+    [[on, a, b], [on, b, 'table'], [clear, a]],
+    [[on, b, a], [on, a, 'table'], [clear, b]]).
+
+/*
+                               a
+    a   b                      b 
+------------- (table) => --------------
+*/
 test_case(2,
     [[on, a, 'table'], [on, b, 'table'], [clear, a], [clear, b]],
     [[on, a, b], [on, b, 'table'], [clear, a]]).
+
+/*
+                               c
+    a                          a
+    b    c                     b
+------------- (table) => -------------
+*/
 test_case(3,
     [[on, a, b], [on, b, 'table'], [on, c, 'table'], [clear, a], [clear, c]],
     [[on, c, a], [on, a, b], [on, b, 'table'], [clear, c]]).
+
+/*
+                               a
+    a                          c
+    b   c                      b
+------------- (table) => --------------
+*/
 test_case(4,
+    [[on, a, b], [on, b, 'table'], [on, c, 'table'], [clear, a], [clear, c]],
+    [[on, c, b], [on, a, c], [on, b, 'table'], [clear, a]]).
+
+/*
+      a   
+      b                           c
+      c                      b    a
+------------- (table) => --------------
+*/
+test_case(5,
     [[on, a, b], [on, b, c], [on, c, 'table'], [clear, a]],
     [[on, b, 'table'], [on, c, a], [on, a, 'table'], [clear, c], [clear, b]]).
-test_case(5,
-    [[on, a, d], [on, d, b],  [on, b, 'table'], [clear, a], [on, c, 'table'], [clear, c]],
-    [[on, c, a], [on, a, b], [on, b, d], [on, d, 'table'], [clear, c]]).
+
+/*
+                             a
+    a                        d
+    b                        c
+    c    d                   b
+------------- (table) => ----------
+ */
+test_case(6,
+    [[on, a, b], [on, b, c],  [on, c, 'table'], [clear, a], [on, d, 'table'], [clear, d]],
+    [[on, c, b], [on, d, c], [on, a, d], [on, b, 'table'], [clear, a]]).
 
 % Run single test case
 run_test(TestID) :-
@@ -125,9 +166,9 @@ run_test(TestID) :-
     retractall(goal(_)),
     assert(start(StartState)),
     assert(goal(GoalState)),
-    format('-------------------------------------------------~n', []),
+    format('---------------------------------------------------------------------~n', []),
     format('Running Test Case ~w~n', [TestID]),
-    format('-------------------------------------------------~n', []),
+    format('---------------------------------------------------------------------~n', []),
     format('Start State: ~w~n', [StartState]),
     format('Goal State: ~w~n', [GoalState]),
     statistics(runtime, [StartTime|_]),
@@ -137,14 +178,14 @@ run_test(TestID) :-
         Time is EndTime - StartTime,
         format('Path: ~n'),
         print_path(Path),
-        format('-------------------------------------------------~n', []),
-        format('Execution Time: ~w ms~n', [Time])
+        format('---------------------------------------------------------------------~n', []),
+        format('=> Execution Time: ~w ms~n', [Time])
     ;
         format('No path found!~n')
     ),
     retractall(start(_)),
     retractall(goal(_)),
-    format('-------------------------------------------------~n', []).
+    format('---------------------------------------------------------------------~n~n', []).
 
 % Helper functions to print the path in better and more readable format
 print_path([]).
